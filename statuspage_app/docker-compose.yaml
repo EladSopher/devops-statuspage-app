@@ -1,0 +1,34 @@
+services:
+  db:
+    image: postgres:13
+    container_name: statuspage-db
+    environment:
+      POSTGRES_DB: statuspage
+      POSTGRES_USER: statuspage
+      POSTGRES_PASSWORD: strongpassword
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:6.2
+    container_name: statuspage-redis
+    ports:
+      - "6379:6379"
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: statuspage-app
+    depends_on:
+      - db
+      - redis
+    ports:
+      - "8000:8000"
+    environment:
+      STATUS_PAGE_CONFIGURATION: "statuspage.configuration"
+
+volumes:
+  pgdata:
