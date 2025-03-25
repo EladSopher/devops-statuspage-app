@@ -9,14 +9,14 @@ done
 echo "PostgreSQL is up!"
 
 echo "Running Django migrations..."
-python statuspage/manage.py migrate
+python manage.py migrate
 
 echo "Collecting static files..."
-python statuspage/manage.py collectstatic --noinput
+python manage.py collectstatic --noinput
 
 if [ "$CREATE_SUPERUSER" = "true" ]; then
   echo "Creating superuser if it doesn't exist..."
-  python statuspage/manage.py shell <<EOF
+  python manage.py shell <<EOF
 from django.contrib.auth import get_user_model
 User = get_user_model()
 if not User.objects.filter(username='admin').exists():
