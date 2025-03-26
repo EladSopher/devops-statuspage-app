@@ -170,6 +170,11 @@ jobs:
           mkdir -p $HOME/.kube
           echo "${{ secrets.KUBE_CONFIG_DATA }}" | base64 -d > $HOME/.kube/config
 
+      # Explicitly Set the Context in Your Deploy Job
+      - name: Set kubectl context
+        run: |
+          kubectl config use-context arn:aws:eks:us-east-1:992382545251:cluster/statuspage-cluster-EI
+
       # Update container image in EKS deployment using kubectl
       - name: Update deployment image in EKS
         run: |
