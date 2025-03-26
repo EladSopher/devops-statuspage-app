@@ -152,6 +152,7 @@ jobs:
       # Set up kubeconfig file from GitHub Secrets
       - name: Set up kubeconfig
         run: |
+          mkdir -p $HOME/.kube
           echo "${{ secrets.KUBE_CONFIG_DATA }}" | base64 -d > $HOME/.kube/config
 
       # Update container image in EKS deployment using kubectl
