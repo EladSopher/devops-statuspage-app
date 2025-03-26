@@ -14,31 +14,31 @@ class QueuingConfig(AppConfig):
 
     def ready(self):
 
-    # Skip Redis logic in CI environments
-    if os.getenv("IS_CI") == "true":
-        return
-
-    if sys.argv[1:2] == ["collectstatic"]:
-        return
-
-    scheduler = django_rq.get_scheduler('default')
-    jobs = list(map(lambda j: j.func_name, scheduler.get_jobs()))
-
-    tasks = [
-        (maintenance_automation, '* * * * *'),
-        (subscriber_automation, '* * * * *'),
-        (metric_automation, '0 0 * * *'),
-        (housekeeping, '0 4 * * *'),
-    ]
-
-    for task, cron_string in tasks:
-        func_name = get_func_name(task)
-        if func_name not in jobs:
-            scheduler.cron(
-                cron_string=cron_string,
-                func=task,
-                queue_name='default',
-            )
+        # Skip Redis logic in CI environments
+        if os.getenv("IS_CI") == "true":
+            return
+    
+        if sys.argv[1:2] == ["collectstatic"]:
+            return
+    
+        scheduler = django_rq.get_scheduler('default')
+        jobs = list(map(lambda j: j.func_name, scheduler.get_jobs()))
+    
+        tasks = [
+            (maintenance_automation, '* * * * *'),
+            (subscriber_automation, '* * * * *'),
+            (metric_automation, '0 0 * * *'),
+            (housekeeping, '0 4 * * *'),
+        ]
+    
+        for task, cron_string in tasks:
+            func_name = get_func_name(task)
+            if func_name not in jobs:
+                scheduler.cron(
+                    cron_string=cron_string,
+                    func=task,
+                    queue_name='default',
+                )
 
 
 def get_func_name(func):
