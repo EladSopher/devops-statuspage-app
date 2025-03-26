@@ -139,7 +139,7 @@ jobs:
 ##############################
   deploy:
     name: "CD - Deploy to EKS"
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
     needs: docker-build
 
     env:
