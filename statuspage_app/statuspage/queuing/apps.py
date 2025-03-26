@@ -1,4 +1,5 @@
 import logging
+import os
 import sys
 
 import django_rq
@@ -12,7 +13,6 @@ class QueuingConfig(AppConfig):
     name = 'queuing'
 
     def ready(self):
-    import os
 
     # Skip Redis logic in CI environments
     if os.getenv("IS_CI") == "true":
