@@ -115,12 +115,21 @@ jobs:
           aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REGISTRY
 
       # Build Docker image using Dockerfile and tag it
-      - name: Build Docker image
+      # Build and push multi-arch Docker image (ARM64) for EKS
+      - name: Build and push Docker image (linux/arm64)
         id: set_tag
         run: |
-          IMAGE_TAG=${ECR_REGISTRY}/${ECR_REPOSITORY}:latest
-          docker build -t $IMAGE_TAG ./statuspage_app
+          IMAGE_TAG=${ECR_REGISTRY}/${ECR_REPOSITORY}:${{ github.sha }}
+          LATEST_TAG=${ECR_REGISTRY}/${ECR_REPOSITORY}:latest
+
+          docker buildx build --platform linux/arm64 \
+            -t $IMAGE_TAG \
+            -t $LATEST_TAG \
+            --push ./statuspage_app
+
           echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
+          echo "image_tag=$IMAGE_TAG" >> $GITHUB_OUTPUT
+
 
       # Run vulnerability scan on Docker image using Trivy
       - name: Scan Image with Trivy
