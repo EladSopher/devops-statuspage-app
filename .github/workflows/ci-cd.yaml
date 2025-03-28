@@ -114,7 +114,6 @@ jobs:
         run: |
           aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REGISTRY
 
-      # Build Docker image using Dockerfile and tag it
       # Build and push multi-arch Docker image (ARM64) for EKS
       - name: Build and Push Multi-Arch Docker Image
         id: set_tag
@@ -128,15 +127,6 @@ jobs:
           echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
           echo "image_tag=$IMAGE_TAG" >> $GITHUB_OUTPUT
 
-      # Run vulnerability scan on Docker image using Trivy
-      # - name: Scan Image with Trivy
-      #   uses: aquasecurity/trivy-action@master
-      #   with:
-      #     image-ref: ${{ env.IMAGE_TAG }}
-      #     format: 'table'
-      #     ignore-unfixed: true
-
-      # Run vulnerability scan on Docker image using Trivy (remote scan)
       # Run vulnerability scan on Docker image using Trivy (multi-arch safe)
       - name: Scan Image with Trivy
         uses: aquasecurity/trivy-action@master
@@ -145,11 +135,9 @@ jobs:
           format: 'table'
           ignore-unfixed: true
 
-
-
       # Push image to Amazon ECR
-      - name: Push Docker image to ECR
-        run: docker push $IMAGE_TAG
+      # - name: Push Docker image to ECR
+      #   run: docker push $IMAGE_TAG
 
 ##############################
 # CD Stage: Deploy to EKS
