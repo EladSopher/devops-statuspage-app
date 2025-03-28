@@ -132,12 +132,28 @@ jobs:
 
 
       # Run vulnerability scan on Docker image using Trivy
-      - name: Scan Image with Trivy
+      # - name: Scan Image with Trivy
+      #   uses: aquasecurity/trivy-action@master
+      #   with:
+      #     image-ref: ${{ env.IMAGE_TAG }}
+      #     format: 'table'
+      #     ignore-unfixed: true
+
+      # Run vulnerability scan on Docker image using Trivy (remote scan)
+      - name: Scan Image with Trivy (remote)
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: ${{ env.IMAGE_TAG }}
           format: 'table'
           ignore-unfixed: true
+          severity: CRITICAL,HIGH,MEDIUM
+          scan-type: image
+          trivy-config: ""
+          scanners: "vuln"
+          skip-db-update: false
+          skip-policy-update: false
+          timeout: "5m0s"
+
 
       # Push image to Amazon ECR
       - name: Push Docker image to ECR
