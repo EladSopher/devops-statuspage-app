@@ -1,52 +1,46 @@
 #
 # Required Settings
 #
-
+import os
+import dj_database_url
 # This is a list of valid fully-qualified domain names (FQDNs) for the Status-Page server. Status-Page will not permit
 # write access to the server via any other hostnames. The first FQDN in the list will be treated as the preferred name.
 #
 # Example: ALLOWED_HOSTS = ['status-page.example.com', 'status-page.internal.local']
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['.imlinfo.xyz', 'app.imlinfo.xyz']
 
 # PostgreSQL database configuration. See the Django documentation for a complete list of available parameters:
 #   https://docs.djangoproject.com/en/stable/ref/settings/#databases
-DATABASE = {
-    'NAME': 'statuspage',         # Database name
-    'USER': 'statuspage',               # PostgreSQL username
-    'PASSWORD': 'strongpassword',           # PostgreSQL password
-    'HOST': 'db',      # Database server
-    'PORT': '',               # Database port (leave blank for default)
-    'CONN_MAX_AGE': 300,      # Max database connection age
-}
+import os
 
+DATABASE = {
+    'NAME': 'statuspageitaielad',
+    'USER': os.environ.get('username'),
+    'PASSWORD': os.environ.get('password'),
+    'HOST': os.environ.get('host').split(':')[0],
+    'PORT': os.environ.get('host').split(':')[1],
+    'CONN_MAX_AGE': 300,
+}
 # Redis database settings. Redis is used for caching and for queuing background tasks. A separate configuration exists
 # for each. Full connection details are required.
+import os
+
 REDIS = {
     'tasks': {
-        'HOST': 'redis',
-        'PORT': 6379,
-        # Comment out `HOST` and `PORT` lines and uncomment the following if using Redis Sentinel
-        # 'SENTINELS': [('mysentinel.redis.example.com', 6379)],
-        # 'SENTINEL_SERVICE': 'status-page',
+        'HOST': os.getenv('REDIS_HOST', 'localhost'),
+        'PORT': int(os.getenv('REDIS_PORT', 6379)),
         'PASSWORD': '',
         'DATABASE': 0,
-        'SSL': False,
-        # Set this to True to skip TLS certificate verification
-        # This can expose the connection to attacks, be careful
-        # 'INSECURE_SKIP_TLS_VERIFY': False,
+        'SSL': True,
+        'INSECURE_SKIP_TLS_VERIFY': False,
     },
     'caching': {
-        'HOST': 'redis',
-        'PORT': 6379,
-        # Comment out `HOST` and `PORT` lines and uncomment the following if using Redis Sentinel
-        # 'SENTINELS': [('mysentinel.redis.example.com', 6379)],
-        # 'SENTINEL_SERVICE': 'statuspage',
+        'HOST': os.getenv('REDIS_HOST', 'localhost'),
+        'PORT': int(os.getenv('REDIS_PORT', 6379)),
         'PASSWORD': '',
         'DATABASE': 1,
-        'SSL': False,
-        # Set this to True to skip TLS certificate verification
-        # This can expose the connection to attacks, be careful
-        # 'INSECURE_SKIP_TLS_VERIFY': False,
+        'SSL': True,
+        'INSECURE_SKIP_TLS_VERIFY': False,
     }
 }
 

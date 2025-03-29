@@ -139,14 +139,18 @@ CACHING_REDIS_CA_CERT_PATH = REDIS['caching'].get('CA_CERT_PATH', False)
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': f'{CACHING_REDIS_PROTO}://{CACHING_REDIS_USERNAME_HOST}:{CACHING_REDIS_PORT}/{CACHING_REDIS_DATABASE}',
+        'LOCATION': f"rediss://{REDIS['caching']['HOST']}:{REDIS['caching']['PORT']}/{REDIS['caching']['DATABASE']}",
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-            'PASSWORD': CACHING_REDIS_PASSWORD,
+            'SSL': REDIS['caching']['SSL'],
+            'SSL_CERT_REQS': None if REDIS['caching']['INSECURE_SKIP_TLS_VERIFY'] else 'required',
         }
     }
 }
 
+CACHING_REDIS_SENTINELS = os.getenv('CACHING_REDIS_SENTINELS', None)
+CACHING_REDIS_SKIP_TLS_VERIFY = os.getenv('CACHING_REDIS_SKIP_TLS_VERIFY', '').lower() == 'true'
+CACHING_REDIS_CA_CERT_PATH = os.getenv('CACHING_REDIS_CA_CERT_PATH', None)
 
 if CACHING_REDIS_SENTINELS:
     DJANGO_REDIS_CONNECTION_FACTORY = 'django_redis.pool.SentinelConnectionFactory'
@@ -281,7 +285,7 @@ X_FRAME_OPTIONS = 'SAMEORIGIN'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_ROOT = BASE_DIR + '/static'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = f'/{BASE_PATH}static/'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATICFILES_DIRS = (

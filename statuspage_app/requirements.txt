@@ -27,3 +27,4 @@ typing-extensions
 svgwrite
 pysvg-py3
 whitenoise
+dj-database-url

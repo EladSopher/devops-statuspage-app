@@ -13,32 +13,52 @@ class QueuingConfig(AppConfig):
     name = 'queuing'
 
     def ready(self):
+        import os
+        import sys
+        import logging
 
-        # Skip Redis logic in CI environments
+        logger = logging.getLogger('statuspage.queuing')
+
         if os.getenv("IS_CI") == "true":
+            logger.info("Skipping scheduler init in CI.")
             return
-    
+
         if sys.argv[1:2] == ["collectstatic"]:
+            logger.info("Skipping scheduler init during collectstatic.")
             return
-    
-        scheduler = django_rq.get_scheduler('default')
-        jobs = list(map(lambda j: j.func_name, scheduler.get_jobs()))
-    
-        tasks = [
-            (maintenance_automation, '* * * * *'),
-            (subscriber_automation, '* * * * *'),
-            (metric_automation, '0 0 * * *'),
-            (housekeeping, '0 4 * * *'),
-        ]
-    
-        for task, cron_string in tasks:
-            func_name = get_func_name(task)
-            if func_name not in jobs:
-                scheduler.cron(
-                    cron_string=cron_string,
-                    func=task,
-                    queue_name='default',
-                )
+
+        if sys.argv[1:2] == ["migrate"]:
+            logger.info("Skipping scheduler init during migrations.")
+            return
+
+        if os.getenv("ENABLE_SCHEDULER", "false").lower() != "true":
+            logger.info("ENABLE_SCHEDULER is not true — skipping job scheduling.")
+            return
+
+        try:
+            import django_rq
+            scheduler = django_rq.get_scheduler('default')
+            jobs = list(map(lambda j: j.func_name, scheduler.get_jobs()))
+
+            tasks = [
+                (maintenance_automation, '* * * * *'),
+                (subscriber_automation, '* * * * *'),
+                (metric_automation, '0 0 * * *'),
+                (housekeeping, '0 4 * * *'),
+            ]
+
+            for task, cron_string in tasks:
+                func_name = get_func_name(task)
+                if func_name not in jobs:
+                    scheduler.cron(
+                        cron_string=cron_string,
+                        func=task,
+                        queue_name='default',
+                    )
+            logger.info(" Scheduler initialized successfully.")
+
+        except Exception as e:
+            logger.warning(f" Failed to initialize scheduler: {e}")
 
 
 def get_func_name(func):
