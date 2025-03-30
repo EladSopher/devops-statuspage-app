@@ -179,7 +179,7 @@ jobs:
       # Update container image in EKS deployment using kubectl
       - name: Update deployment image in EKS
         run: |
-          kubectl set image deployment/statuspage app=${IMAGE_TAG} -n statuspage
+          kubectl set image deployment/statuspage statuspage=${IMAGE_TAG} -n statuspage
           kubectl rollout status deployment/statuspage -n statuspage
 
 #######################################
