@@ -126,6 +126,7 @@ jobs:
             --push ./statuspage_app
           echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
           echo "image_tag=$IMAGE_TAG" >> $GITHUB_OUTPUT
+          echo "Final image tag: $IMAGE_TAG"
 
        # 🧪 DEBUG: Confirm output value
       - name: Debug output from set_tag
