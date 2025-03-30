@@ -179,8 +179,8 @@ jobs:
       # Update container image in EKS deployment using kubectl
       - name: Update deployment image in EKS
         run: |
-          kubectl set image deployment/statuspage-deployment app=${IMAGE_TAG} -n statuspage
-          kubectl rollout status deployment/statuspage-deployment -n statuspage
+          kubectl set image deployment/statuspage app=${IMAGE_TAG} -n statuspage
+          kubectl rollout status deployment/statuspage -n statuspage
 
 #######################################
 # Notification Stage: Email via Gmail
