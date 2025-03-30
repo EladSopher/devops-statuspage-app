@@ -11,19 +11,21 @@ ALLOWED_HOSTS = ['.imlinfo.xyz', 'app.imlinfo.xyz']
 
 # PostgreSQL database configuration. See the Django documentation for a complete list of available parameters:
 #   https://docs.djangoproject.com/en/stable/ref/settings/#databases
-import os
+
+host_string = os.environ.get('host', 'localhost:5432')
+host_parts = host_string.split(':')
 
 DATABASE = {
     'NAME': 'statuspageitaielad',
-    'USER': os.environ.get('username'),
-    'PASSWORD': os.environ.get('password'),
-    'HOST': os.environ.get('host').split(':')[0],
-    'PORT': os.environ.get('host').split(':')[1],
+    'USER': os.environ.get('username', 'default_user'),
+    'PASSWORD': os.environ.get('password', 'default_pass'),
+    'HOST': host_parts[0],
+    'PORT': host_parts[1] if len(host_parts) > 1 else '5432',
     'CONN_MAX_AGE': 300,
 }
+
 # Redis database settings. Redis is used for caching and for queuing background tasks. A separate configuration exists
 # for each. Full connection details are required.
-import os
 
 REDIS = {
     'tasks': {
