@@ -127,6 +127,10 @@ jobs:
           echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
           echo "image_tag=$IMAGE_TAG" >> $GITHUB_OUTPUT
 
+       # 🧪 DEBUG: Confirm output value
+      - name: Debug output from set_tag
+        run: echo "Output from docker-build: ${{ steps.set_tag.outputs.image_tag }}"
+
       # Run vulnerability scan on Docker image using Trivy (multi-arch safe)
       - name: Scan Image with Trivy
         uses: aquasecurity/trivy-action@master
