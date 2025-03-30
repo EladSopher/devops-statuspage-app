@@ -135,10 +135,6 @@ jobs:
           format: 'table'
           ignore-unfixed: true
 
-      # Push image to Amazon ECR
-      # - name: Push Docker image to ECR
-      #   run: docker push $IMAGE_TAG
-
 ##############################
 # CD Stage: Deploy to EKS
 ##############################
