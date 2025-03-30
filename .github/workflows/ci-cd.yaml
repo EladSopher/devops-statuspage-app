@@ -124,9 +124,7 @@ jobs:
             -t $IMAGE_TAG \
             -t ${ECR_REGISTRY}/${ECR_REPOSITORY}:latest \
             --push ./statuspage_app
-          echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
           echo "image_tag=$IMAGE_TAG" >> $GITHUB_OUTPUT
-          echo "Final image tag: $IMAGE_TAG"
 
        # 🧪 DEBUG: Confirm output value
       - name: Debug output from set_tag
@@ -181,14 +179,12 @@ jobs:
         run: |
           kubectl config use-context arn:aws:eks:us-east-1:992382545251:cluster/statuspage-cluster-EI
 
-      # Debug image tag
-      - name: Debug image tag
-        run: echo "${{ toJson(needs.docker-build.outputs) }}"
-
       # Update container image in EKS deployment using kubectl
       - name: Update deployment image in EKS
         run: |
-          kubectl set image deployment/statuspage statuspage=${IMAGE_TAG} -n statuspage
+          IMAGE_TAG="${{ needs.docker-build.outputs.image_tag }}"
+          echo "Using image tag: $IMAGE_TAG"
+          kubectl set image deployment/statuspage statuspage=$IMAGE_TAG -n statuspage
           kubectl rollout status deployment/statuspage -n statuspage
 
 #######################################
