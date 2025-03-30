@@ -178,7 +178,7 @@ jobs:
 
       # Debug image tag
       - name: Debug image tag
-        run: echo "Using image tag: ${{ env.IMAGE_TAG }}"
+        run: echo "${{ env.IMAGE_TAG }}"
 
       # Update container image in EKS deployment using kubectl
       - name: Update deployment image in EKS
