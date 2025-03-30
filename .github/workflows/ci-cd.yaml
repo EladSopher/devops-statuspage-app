@@ -182,7 +182,7 @@ jobs:
 
       # Debug image tag
       - name: Debug image tag
-        run: echo "${{ needs.docker-build.outputs.image_tag }}"
+        run: echo "${{ toJson(needs.docker-build.outputs) }}"
 
       # Update container image in EKS deployment using kubectl
       - name: Update deployment image in EKS
