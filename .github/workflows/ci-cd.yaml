@@ -129,7 +129,7 @@ jobs:
 
        # 🧪 DEBUG: Confirm output value
       - name: Debug output from set_tag
-        run: echo "Output from docker-build: ${{ steps.set_tag.outputs.image_tag }}"
+        run: echo "${{ steps.set_tag.outputs.image_tag }}"
 
       # Run vulnerability scan on Docker image using Trivy (multi-arch safe)
       - name: Scan Image with Trivy
