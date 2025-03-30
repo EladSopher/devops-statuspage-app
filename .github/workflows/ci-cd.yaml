@@ -138,6 +138,16 @@ jobs:
           format: 'table'
           ignore-unfixed: true
 
+      # Save image tag to file and upload it as artifact
+      - name: Save image tag to artifact
+        run: echo "${{ steps.set_tag.outputs.image_tag }}" > image_tag.txt
+
+      - name: Upload image tag artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: image-tag
+          path: image_tag.txt
+
 ##############################
 # CD Stage: Deploy to EKS
 ##############################
@@ -150,6 +160,17 @@ jobs:
     #   IMAGE_TAG: ${{ needs.docker-build.outputs.image_tag }}
 
     steps:
+      # Download image tag artifact
+      - name: Download image tag artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: image-tag
+          path: .
+
+      # Read image tag from file
+      - name: Read image tag into variable
+        run: echo "IMAGE_TAG=$(cat image_tag.txt)" >> $GITHUB_ENV
+        
       - name: Checkout code
         uses: actions/checkout@v3
 
@@ -182,8 +203,6 @@ jobs:
       # Update container image in EKS deployment using kubectl
       - name: Update deployment image in EKS
         run: |
-          IMAGE_TAG="${{ needs.docker-build.outputs.image_tag }}"
-          echo "Using image tag: $IMAGE_TAG"
           kubectl set image deployment/statuspage statuspage=$IMAGE_TAG -n statuspage
           kubectl rollout status deployment/statuspage -n statuspage
 
