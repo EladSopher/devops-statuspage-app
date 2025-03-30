@@ -176,6 +176,10 @@ jobs:
         run: |
           kubectl config use-context arn:aws:eks:us-east-1:992382545251:cluster/statuspage-cluster-EI
 
+      # Debug image tag
+      - name: Debug image tag
+        run: echo "Using image tag: ${{ env.IMAGE_TAG }}"
+
       # Update container image in EKS deployment using kubectl
       - name: Update deployment image in EKS
         run: |
