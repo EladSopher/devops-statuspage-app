@@ -1,6 +1,7 @@
 from django.test import TestCase
+from queuing.models import QueuedTask
 
-class SmokeTestCase(TestCase):
-    def test_basic_truth(self):
-        """A simple test to ensure the testing framework is working."""
-        self.assertTrue(True)
+class QueuingTestCase(TestCase):
+    def test_enqueue_task(self):
+        task = QueuedTask.objects.create(name="Test Task", status="pending")
+        self.assertEqual(task.status, "pending")
