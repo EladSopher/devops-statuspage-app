@@ -1,6 +1,7 @@
 from django.test import TestCase
+from extras.models import ConfigContext
 
-class SmokeTestCase(TestCase):
-    def test_basic_truth(self):
-        """A simple test to ensure the testing framework is working."""
-        self.assertTrue(True)
+class ExtrasTestCase(TestCase):
+    def test_create_config_context(self):
+        context = ConfigContext.objects.create(name="Test Context", weight=10)
+        self.assertEqual(context.name, "Test Context")
