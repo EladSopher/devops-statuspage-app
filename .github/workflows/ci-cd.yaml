@@ -24,6 +24,21 @@ jobs:
     name: "CI - Django Health Checks"
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:13
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: statuspageitaielad
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       # Checkout source code
       - name: Checkout code
@@ -40,6 +55,12 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r statuspage_app/requirements.txt
+
+      - name: Set environment variables for DB
+        run: |
+          echo "username=postgres" >> $GITHUB_ENV
+          echo "password=postgres" >> $GITHUB_ENV
+          echo "host=localhost:5432" >> $GITHUB_ENV
 
       # Run Django system checks (e.g., URL conf, model structure)
       - name: Django system checks
