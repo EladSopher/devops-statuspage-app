@@ -1,6 +1,10 @@
 from django.test import TestCase
+from django.contrib.auth import get_user_model
 
-class SmokeTestCase(TestCase):
-    def test_basic_truth(self):
-        """A simple test to ensure the testing framework is working."""
-        self.assertTrue(True)
+User = get_user_model()
+
+class UsersTestCase(TestCase):
+    def test_create_user(self):
+        user = User.objects.create_user(username="testuser", password="secret123")
+        self.assertTrue(user.check_password("secret123"))
+        self.assertEqual(user.username, "testuser")
