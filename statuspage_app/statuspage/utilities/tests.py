@@ -1,6 +1,7 @@
 from django.test import TestCase
+from utilities.models import Banner
 
-class SmokeTestCase(TestCase):
-    def test_basic_truth(self):
-        """A simple test to ensure the testing framework is working."""
-        self.assertTrue(True)
+class UtilitiesTestCase(TestCase):
+    def test_create_banner(self):
+        banner = Banner.objects.create(message="Maintenance Notice", level="info")
+        self.assertIn("Maintenance", banner.message)
