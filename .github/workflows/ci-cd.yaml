@@ -71,7 +71,7 @@ jobs:
       # Run Django unit tests
       - name: Run Django tests
         working-directory: statuspage_app/statuspage
-        run: python manage.py test --verbosity 2
+        run: python manage.py test
 
 
 #################################
@@ -116,16 +116,16 @@ jobs:
     needs: security-scan
 
     # Define outputs (used by deploy job)
-    outputs:
-      image_tag: ${{ steps.set_tag.outputs.image_tag }}
+    # outputs:
+      # image_tag: ${{ steps.set_tag.outputs.image_tag }}
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
       # Set up Docker Buildx for multi-arch builds (future proof)
-      # - name: Set up Docker Buildx
-        # uses: docker/setup-buildx-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
       # Configure AWS credentials to access ECR
       - name: Configure AWS credentials
