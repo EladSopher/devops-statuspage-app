@@ -47,7 +47,9 @@ jobs:
 
       # Run Django unit tests
       - name: Run Django tests
-        run: python statuspage_app/statuspage/manage.py test
+        working-directory: statuspage_app/statuspage
+        run: python manage.py test --verbosity 2
+
 
 #################################
 # CI Stage: Security Scanning
