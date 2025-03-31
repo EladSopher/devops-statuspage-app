@@ -1,6 +1,11 @@
 from django.test import TestCase
+from components.models import Component
 
-class SmokeTestCase(TestCase):
-    def test_basic_truth(self):
-        """A simple test to ensure the testing framework is working."""
-        self.assertTrue(True)
+class ComponentModelTest(TestCase):
+    def test_create_component(self):
+        component = Component.objects.create(
+            name="API Server",
+            status="operational"
+        )
+        self.assertEqual(component.name, "API Server")
+        self.assertEqual(component.status, "operational")
