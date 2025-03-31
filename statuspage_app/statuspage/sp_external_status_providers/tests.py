@@ -1,6 +1,7 @@
 from django.test import TestCase
+from sp_external_status_providers.models import ExternalStatusPage
 
-class SmokeTestCase(TestCase):
-    def test_basic_truth(self):
-        """A simple test to ensure the testing framework is working."""
-        self.assertTrue(True)
+class ExternalStatusProviderTestCase(TestCase):
+    def test_create_external_page(self):
+        page = ExternalStatusPage.objects.create(name="AWS", url="https://status.aws.amazon.com")
+        self.assertIn("aws", page.url)
