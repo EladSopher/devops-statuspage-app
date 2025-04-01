@@ -12,6 +12,8 @@ from .configuration import *
 
 if os.getenv("ALLOW_ALL_HOSTS", "false").lower() == "true":
     ALLOWED_HOSTS = ["*"]
+print("DEBUG :: ALLOW_ALL_HOSTS=", os.getenv("ALLOW_ALL_HOSTS"))
+print("DEBUG :: ALLOWED_HOSTS=", ALLOWED_HOSTS)
 
 VERSION = '2.5.2-dev'
 
