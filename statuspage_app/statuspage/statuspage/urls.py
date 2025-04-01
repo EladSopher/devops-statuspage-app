@@ -84,6 +84,7 @@ _patterns = [
     path('__reload__/', include('django_browser_reload.urls')),
 
     path("metrics", prometheus_exports.ExportToDjangoView),
+    path('', include('django_prometheus.urls')),
 ]
 
 # Prepend BASE_PATH
