@@ -9,6 +9,7 @@ django-otp-yubikey
 django-redis
 django-rq
 django-tables2
+django-prometheus
 django
 django_browser_reload
 djangorestframework
