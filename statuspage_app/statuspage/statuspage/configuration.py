@@ -16,6 +16,9 @@ ALLOWED_HOSTS = [
     'statuspage-service.statuspage.svc.cluster.local',
 ]
 
+if os.getenv("ALLOW_ALL_HOSTS", "false").lower() == "true":
+    ALLOWED_HOSTS = ['*']
+
 # PostgreSQL database configuration. See the Django documentation for a complete list of available parameters:
 #   https://docs.djangoproject.com/en/stable/ref/settings/#databases
 
