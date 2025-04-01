@@ -8,6 +8,10 @@ from django.utils.translation import gettext_lazy as _
 
 from statuspage.config import PARAMS
 from statuspage.constants import RQ_QUEUE_HIGH, RQ_QUEUE_DEFAULT, RQ_QUEUE_LOW
+from .configuration import *
+
+if os.getenv("ALLOW_ALL_HOSTS", "false").lower() == "true":
+    ALLOWED_HOSTS = ["*"]
 
 VERSION = '2.5.2-dev'
 
