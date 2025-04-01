@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.views.static import serve
+from django_prometheus import exports as prometheus_exports
 
 from extras.plugins.urls import plugin_patterns, plugin_api_patterns, plugin_admin_patterns
 from .admin import admin_site
@@ -81,6 +82,8 @@ _patterns = [
     path('admin/', admin_site.urls),
 
     path('__reload__/', include('django_browser_reload.urls')),
+
+    path("metrics", prometheus_exports.ExportToDjangoView),
 ]
 
 # Prepend BASE_PATH
