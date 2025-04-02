@@ -1,4 +1,3 @@
-from .configuration import *
 import importlib
 import os
 import sys
@@ -9,11 +8,6 @@ from django.utils.translation import gettext_lazy as _
 
 from statuspage.config import PARAMS
 from statuspage.constants import RQ_QUEUE_HIGH, RQ_QUEUE_DEFAULT, RQ_QUEUE_LOW
-
-if os.getenv("ALLOW_ALL_HOSTS", "false").lower() == "true":
-    ALLOWED_HOSTS = ["*"]
-print("DEBUG :: ALLOW_ALL_HOSTS=", os.getenv("ALLOW_ALL_HOSTS"))
-print("DEBUG :: ALLOWED_HOSTS=", ALLOWED_HOSTS)
 
 VERSION = '2.5.2-dev'
 
@@ -235,8 +229,6 @@ MIDDLEWARE = [
     'statuspage.middleware.APIVersionMiddleware',
     'statuspage.middleware.ObjectChangeMiddleware',
     'statuspage.middleware.DynamicConfigMiddleware',
-    'django_prometheus.middleware.PrometheusBeforeMiddleware',
-    'django_prometheus.middleware.PrometheusAfterMiddleware',
 ]
 
 ROOT_URLCONF = 'statuspage.urls'
@@ -480,10 +472,3 @@ for plugin_name in PLUGINS:
     RQ_QUEUES.update({
         f"{plugin_name}.{queue}": RQ_PARAMS for queue in plugin_config.queues
     })
-# settings.py — very last lines of the file
-
-if os.getenv("ALLOW_ALL_HOSTS", "false").lower() == "true":
-    globals()['ALLOWED_HOSTS'] = ['*']
-    print("🔥 FINAL OVERRIDE: ALLOWED_HOSTS set to ['*']")
-else:
-    print("🔥 FINAL ALLOWED_HOSTS =", globals().get('ALLOWED_HOSTS'))
