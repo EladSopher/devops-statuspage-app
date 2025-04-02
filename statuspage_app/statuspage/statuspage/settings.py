@@ -480,3 +480,10 @@ for plugin_name in PLUGINS:
     RQ_QUEUES.update({
         f"{plugin_name}.{queue}": RQ_PARAMS for queue in plugin_config.queues
     })
+# settings.py — very last lines of the file
+
+if os.getenv("ALLOW_ALL_HOSTS", "false").lower() == "true":
+    globals()['ALLOWED_HOSTS'] = ['*']
+    print("🔥 FINAL OVERRIDE: ALLOWED_HOSTS set to ['*']")
+else:
+    print("🔥 FINAL ALLOWED_HOSTS =", globals().get('ALLOWED_HOSTS'))
